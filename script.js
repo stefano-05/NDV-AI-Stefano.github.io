@@ -23,6 +23,10 @@
     paragraph.style.fontSize = clamped + "px";
   }
 
+  document.getElementById("textColor").addEventListener("input", function (e) {
+  paragraph.style.color = e.target.value;
+});
+
   document.getElementById("larger").addEventListener("click", function () {
     if (currentSize() < maxPx) {
       setSize(currentSize() + stepPx);
