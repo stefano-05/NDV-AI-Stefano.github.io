@@ -7,10 +7,13 @@
   var stepPx = 2;
 
   // Update displayed text when user types
-  input.addEventListener("input", function () {
+  input.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    e.preventDefault(); // prevents new line
     paragraph.innerText = input.value;
-  });
-
+  }
+});
+  
   function currentSize() {
     return parseFloat(getComputedStyle(paragraph).fontSize);
   }
