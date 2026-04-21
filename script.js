@@ -3,17 +3,17 @@
   var input = document.getElementById("inputText");
 
   var minPx = 14;
-  var maxPx = 28;
+  var maxPx = 32;
   var stepPx = 2;
 
-  // Update displayed text when user types
+  // Load text when pressing Enter
   input.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    e.preventDefault(); // prevents new line
-    paragraph.innerText = input.value;
-  }
-});
-  
+    if (e.key === "Enter") {
+      e.preventDefault();
+      paragraph.innerText = input.value;
+    }
+  });
+
   function currentSize() {
     return parseFloat(getComputedStyle(paragraph).fontSize);
   }
@@ -22,10 +22,6 @@
     var clamped = Math.min(maxPx, Math.max(minPx, px));
     paragraph.style.fontSize = clamped + "px";
   }
-
-  document.getElementById("textColor").addEventListener("input", function (e) {
-  paragraph.style.color = e.target.value;
-});
 
   document.getElementById("larger").addEventListener("click", function () {
     if (currentSize() < maxPx) {
@@ -44,18 +40,33 @@
     paragraph.style.backgroundColor = e.target.value;
   });
 
-  // Highlight
-  document.getElementById("highlight").addEventListener("click", function () {
-    var words = paragraph.innerText.split(" ");
-    for (var i = 0; i < words.length; i++) {
-      if (i < 5) {
-        words[i] = "<mark>" + words[i] + "</mark>";
-      }
-    }
-    paragraph.innerHTML = words.join(" ");
+  // Font color
+  document.getElementById("textColor").addEventListener("input", function (e) {
+    paragraph.style.color = e.target.value;
   });
 
-  // Summary
+  // Highlight selected text
+  document.getElementById("highlight").addEventListener("click", function () {
+    var selection = window.getSelection();
+
+    if (!selection.rangeCount) return;
+
+    var range = selection.getRangeAt(0);
+
+    if (!paragraph.contains(range.commonAncestorContainer)) return;
+
+    var mark = document.createElement("mark");
+
+    try {
+      range.surroundContents(mark);
+    } catch (e) {
+      alert("Please select a smaller portion of text to highlight.");
+    }
+
+    selection.removeAllRanges();
+  });
+
+  // Summary (first 2 sentences)
   document.getElementById("summary").addEventListener("click", function () {
     var text = paragraph.innerText;
     var sentences = text.split(".");
