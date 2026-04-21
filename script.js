@@ -40,12 +40,17 @@
     paragraph.style.backgroundColor = e.target.value;
   });
 
-  // Font color
+  // Text color
   document.getElementById("textColor").addEventListener("input", function (e) {
     paragraph.style.color = e.target.value;
   });
 
-  // 🔁 Highlight toggle (highlight + un-highlight)
+  // Font change
+  document.getElementById("fontSelect").addEventListener("change", function (e) {
+    paragraph.style.fontFamily = e.target.value;
+  });
+
+  // Highlight toggle
   document.getElementById("highlight").addEventListener("click", function () {
     var selection = window.getSelection();
 
@@ -55,10 +60,9 @@
 
     if (!paragraph.contains(range.commonAncestorContainer)) return;
 
-    // Check if already highlighted
     var parent = range.commonAncestorContainer.parentNode;
 
-    // If clicking inside an existing highlight → remove it
+    // If already highlighted → remove
     if (parent && parent.tagName === "MARK") {
       var textNode = document.createTextNode(parent.textContent);
       parent.replaceWith(textNode);
@@ -66,7 +70,6 @@
       return;
     }
 
-    // Otherwise → apply highlight
     var selectedText = selection.toString();
 
     if (!selectedText.trim()) return;
