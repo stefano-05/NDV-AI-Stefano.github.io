@@ -1,8 +1,15 @@
 (function () {
   var paragraph = document.getElementById("content");
+  var input = document.getElementById("inputText");
+
   var minPx = 14;
   var maxPx = 28;
   var stepPx = 2;
+
+  // Update displayed text when user types
+  input.addEventListener("input", function () {
+    paragraph.innerText = input.value;
+  });
 
   function currentSize() {
     return parseFloat(getComputedStyle(paragraph).fontSize);
@@ -25,19 +32,12 @@
     }
   });
 
-  // Background color changer
+  // Background color
   document.getElementById("bgColor").addEventListener("input", function (e) {
     paragraph.style.backgroundColor = e.target.value;
   });
 
-  // Text-to-speech
-  document.getElementById("read").addEventListener("click", function () {
-    var speech = new SpeechSynthesisUtterance(paragraph.innerText);
-    speech.rate = 0.9;
-    window.speechSynthesis.speak(speech);
-  });
-
-  // Highlight first few words
+  // Highlight
   document.getElementById("highlight").addEventListener("click", function () {
     var words = paragraph.innerText.split(" ");
     for (var i = 0; i < words.length; i++) {
@@ -48,9 +48,10 @@
     paragraph.innerHTML = words.join(" ");
   });
 
-  // Simple summary (first 2 sentences)
+  // Summary
   document.getElementById("summary").addEventListener("click", function () {
-    var sentences = paragraph.innerText.split(".");
+    var text = paragraph.innerText;
+    var sentences = text.split(".");
     var summary = sentences.slice(0, 2).join(".");
     document.getElementById("summaryBox").innerText = summary;
   });
