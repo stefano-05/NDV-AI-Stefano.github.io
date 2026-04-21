@@ -45,7 +45,7 @@
     paragraph.style.color = e.target.value;
   });
 
-  // ✅ IMPROVED HIGHLIGHT FUNCTION (robust)
+  // 🔁 Highlight toggle (highlight + un-highlight)
   document.getElementById("highlight").addEventListener("click", function () {
     var selection = window.getSelection();
 
@@ -53,78 +53,31 @@
 
     var range = selection.getRangeAt(0);
 
-    // Make sure selection is inside the paragraph
     if (!paragraph.contains(range.commonAncestorContainer)) return;
 
+    // Check if already highlighted
+    var parent = range.commonAncestorContainer.parentNode;
+
+    // If clicking inside an existing highlight → remove it
+    if (parent && parent.tagName === "MARK") {
+      var textNode = document.createTextNode(parent.textContent);
+      parent.replaceWith(textNode);
+      selection.removeAllRanges();
+      return;
+    }
+
+    // Otherwise → apply highlight
     var selectedText = selection.toString();
 
     if (!selectedText.trim()) return;
 
-    // Replace selected text safely
-    var span = document.createElement("mark");
-    span.textContent = selectedText;
+    var mark = document.createElement("mark");
+    mark.textContent = selectedText;
 
     range.deleteContents();
-    range.insertNode(span);
+    range.insertNode(mark);
 
     selection.removeAllRanges();
-  });
-
-  // Smart summary
-  document.getElementById("summary").addEventListener("click", function () {
-    var text = paragraph.innerText;
-
-    if (!text.trim()) {
-      document.getElementById("summaryBox").innerText = "No text to summarize.";
-      return;
-    }
-
-    var sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
-    if (!sentences) {
-      document.getElementById("summaryBox").innerText = text;
-      return;
-    }
-
-    var words = text.toLowerCase().match(/\w+/g);
-
-    var stopWords = [
-      "the", "is", "in", "and", "to", "a", "of", "that", "it",
-      "on", "for", "with", "as", "was", "were", "this"
-    ];
-
-    var wordFreq = {};
-
-    words.forEach(function (word) {
-      if (!stopWords.includes(word)) {
-        wordFreq[word] = (wordFreq[word] || 0) + 1;
-      }
-    });
-
-    var sentenceScores = sentences.map(function (sentence) {
-      var score = 0;
-      var sentenceWords = sentence.toLowerCase().match(/\w+/g);
-
-      sentenceWords.forEach(function (word) {
-        if (wordFreq[word]) {
-          score += wordFreq[word];
-        }
-      });
-
-      return { sentence: sentence, score: score };
-    });
-
-    sentenceScores.sort(function (a, b) {
-      return b.score - a.score;
-    });
-
-    var summary = sentenceScores
-      .slice(0, 2)
-      .map(function (item) {
-        return item.sentence.trim();
-      })
-      .join(" ");
-
-    document.getElementById("summaryBox").innerText = summary;
   });
 
 })();
