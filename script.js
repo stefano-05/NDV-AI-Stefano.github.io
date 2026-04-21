@@ -3,7 +3,7 @@
   var input = document.getElementById("inputText");
 
   var minPx = 14;
-  var maxPx = 32;
+  var maxPx = 28;
   var stepPx = 2;
 
   // Load text when pressing Enter
@@ -66,11 +66,66 @@
     selection.removeAllRanges();
   });
 
-  // Summary (first 2 sentences)
+  // Improved smart summary
   document.getElementById("summary").addEventListener("click", function () {
     var text = paragraph.innerText;
-    var sentences = text.split(".");
-    var summary = sentences.slice(0, 2).join(".");
+
+    if (!text.trim()) {
+      document.getElementById("summaryBox").innerText = "No text to summarize.";
+      return;
+    }
+
+    // Split into sentences
+    var sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+    if (!sentences) {
+      document.getElementById("summaryBox").innerText = text;
+      return;
+    }
+
+    // Get words
+    var words = text.toLowerCase().match(/\w+/g);
+
+    // Common words to ignore
+    var stopWords = [
+      "the", "is", "in", "and", "to", "a", "of", "that", "it",
+      "on", "for", "with", "as", "was", "were", "this"
+    ];
+
+    var wordFreq = {};
+
+    words.forEach(function (word) {
+      if (!stopWords.includes(word)) {
+        wordFreq[word] = (wordFreq[word] || 0) + 1;
+      }
+    });
+
+    // Score sentences
+    var sentenceScores = sentences.map(function (sentence) {
+      var score = 0;
+      var sentenceWords = sentence.toLowerCase().match(/\w+/g);
+
+      sentenceWords.forEach(function (word) {
+        if (wordFreq[word]) {
+          score += wordFreq[word];
+        }
+      });
+
+      return { sentence: sentence, score: score };
+    });
+
+    // Sort by importance
+    sentenceScores.sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    // Take top 2 sentences
+    var summary = sentenceScores
+      .slice(0, 2)
+      .map(function (item) {
+        return item.sentence.trim();
+      })
+      .join(" ");
+
     document.getElementById("summaryBox").innerText = summary;
   });
 
