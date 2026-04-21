@@ -45,7 +45,7 @@
     paragraph.style.color = e.target.value;
   });
 
-  // Highlight selected text
+  // ✅ IMPROVED HIGHLIGHT FUNCTION (robust)
   document.getElementById("highlight").addEventListener("click", function () {
     var selection = window.getSelection();
 
@@ -53,20 +53,24 @@
 
     var range = selection.getRangeAt(0);
 
+    // Make sure selection is inside the paragraph
     if (!paragraph.contains(range.commonAncestorContainer)) return;
 
-    var mark = document.createElement("mark");
+    var selectedText = selection.toString();
 
-    try {
-      range.surroundContents(mark);
-    } catch (e) {
-      alert("Please select a smaller portion of text to highlight.");
-    }
+    if (!selectedText.trim()) return;
+
+    // Replace selected text safely
+    var span = document.createElement("mark");
+    span.textContent = selectedText;
+
+    range.deleteContents();
+    range.insertNode(span);
 
     selection.removeAllRanges();
   });
 
-  // Improved smart summary
+  // Smart summary
   document.getElementById("summary").addEventListener("click", function () {
     var text = paragraph.innerText;
 
@@ -75,17 +79,14 @@
       return;
     }
 
-    // Split into sentences
     var sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
     if (!sentences) {
       document.getElementById("summaryBox").innerText = text;
       return;
     }
 
-    // Get words
     var words = text.toLowerCase().match(/\w+/g);
 
-    // Common words to ignore
     var stopWords = [
       "the", "is", "in", "and", "to", "a", "of", "that", "it",
       "on", "for", "with", "as", "was", "were", "this"
@@ -99,7 +100,6 @@
       }
     });
 
-    // Score sentences
     var sentenceScores = sentences.map(function (sentence) {
       var score = 0;
       var sentenceWords = sentence.toLowerCase().match(/\w+/g);
@@ -113,12 +113,10 @@
       return { sentence: sentence, score: score };
     });
 
-    // Sort by importance
     sentenceScores.sort(function (a, b) {
       return b.score - a.score;
     });
 
-    // Take top 2 sentences
     var summary = sentenceScores
       .slice(0, 2)
       .map(function (item) {
