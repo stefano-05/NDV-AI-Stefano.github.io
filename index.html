@@ -9,14 +9,25 @@
 <body>
   <main>
     <h1>An afternoon of reading</h1>
+
     <p id="content">
       Reading is a quiet conversation with another mind. You set the pace, turn back when a phrase deserves another pass, and carry away whatever stays with you. This page is a small space for that kind of attention—nothing flashy, just text you can make larger or smaller so it stays comfortable for your eyes.
     </p>
+
     <div class="controls">
-      <button type="button" id="larger" aria-label="Increase text size">Larger text</button>
-      <button type="button" id="smaller" aria-label="Decrease text size">Smaller text</button>
+      <button type="button" id="larger">Larger text</button>
+      <button type="button" id="smaller">Smaller text</button>
+
+      <input type="color" id="bgColor" title="Change background color">
+
+      <button type="button" id="read">Read Aloud</button>
+      <button type="button" id="highlight">Highlight</button>
+      <button type="button" id="summary">Summarize</button>
     </div>
+
+    <div id="summaryBox"></div>
   </main>
+
   <script src="script.js" defer></script>
 </body>
 </html>
