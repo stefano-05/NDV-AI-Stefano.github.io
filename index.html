@@ -5,31 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ReadAble</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
   <main>
-    <h1>Neurodivergent reading assistant</h1>
+    <h1>An afternoon of reading</h1>
 
-    <!-- NEW: user input -->
+    <!-- TEXT INPUT -->
     <textarea id="inputText" placeholder="Paste or type your text here..."></textarea>
 
     <!-- DISPLAY AREA -->
-    <p id="content">
-      Your text will appear here...
-    </p>
+    <p id="content">Your text will appear here...</p>
 
     <div class="controls">
-      <button type="button" id="larger">Larger text</button>
-      <button type="button" id="smaller">Smaller text</button>
-      
-      <input type="color" id="bgColor" title="Change background color">
-      <input type="color" id="textColor" title="Change text color">
 
-      <button type="button" id="highlight">Highlight</button>
-      <button type="button" id="summary">Summarize</button>
+      <button id="larger">Larger text</button>
+      <button id="smaller">Smaller text</button>
+
+      <!-- FONT SELECT -->
+      <label for="fontSelect">Font:</label>
+      <select id="fontSelect">
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="'Open Sans', sans-serif">Open Serif</option>
+        <option value="'OpenDyslexic', sans-serif">OpenDyslexic</option>
+      </select>
+
+      <!-- TEXT COLOR -->
+      <label for="textColor">Text Color:</label>
+      <input type="color" id="textColor">
+
+      <!-- BACKGROUND COLOR -->
+      <label for="bgColor">Background Color:</label>
+      <input type="color" id="bgColor">
+
+      <button id="highlight">Highlight / Unhighlight</button>
+
     </div>
-
-    <div id="summaryBox"></div>
   </main>
 
   <script src="script.js" defer></script>
